@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prod-http
+  namespace: prod-http
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /canary
+        pathType: Prefix
+        backend:
+          service:
+            name: prod-http-svc
+            port:
+              number: 80

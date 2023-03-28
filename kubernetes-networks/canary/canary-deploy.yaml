@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-http
+  namespace: canary-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: canary-http
+  template:
+    metadata:
+      labels:
+        app: canary-http
+    spec:
+      containers:
+      - name: canary-http
+        image: kicbase/echo-server:1.0
+        ports:
+        - containerPort: 8080
