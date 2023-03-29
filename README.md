@@ -15,3 +15,22 @@ DZ #2
 5. Создан манифест paymentservice-deployment-reverse.yaml реализующий обновление подов paymentservice способом Reverse Rolling Update.
 6. Создан манифест frontend-deployment.yaml запускающий под frontend кнтролируемый deployment и реализует readinessprobe.
 7. Создан манифест node-exporter-daemonset.yaml запускающий под node-exporter на всех нодах класстера, так же добавлен tolerations для запуска на мастер ноде.
+
+DZ #3
+1. Настройка readinessProbe и livenessProbe в pod`ах.
+2. Реализовали стратегии обнавлений.
+3. Создан манифест web-svc-cip.yaml в котором реализуется service настроенный на clusterIP.
+4. minikube был перенастроен на работу IPVS.
+5. Произведен деплой лоадбалансера MetalLB.
+6. Создан манифест web-svc-lb.yaml в котором реализуется работа service через лоадбалансер.
+7. Созданы манифесты в каталоге coredns настраивающие доступ к coredns из вне кластера через лоадбалансер.
+8. Создан манифест web-svc-headless.yaml убирающий внутренний адрес у service для последующей настройки доступа через ingress.
+9. Создан манифест web-ingress.yaml открывающий доступ к поду через ingress.
+10. В каталоге dashboard создан манифест открывающий доступ к kubernets dashboard через ingress.
+11. В каталоге canary созданы манифесты создающие 2 тестовых web пода, 2 сервиса для доступа к ним и 2 ingress сущности реализующие канареечный доступ к подам.
+
+DZ #4
+1. Создан манифест minio-statefulset.yaml осуществляющий деплой S3 хранилища minio.
+2. Создан манифест minio-headless-service.yaml предоставляющий доступ к панели администрирования minio.
+3. Создан манифест minio-secrets.yaml который создает secret для хранения creds от панели администрирования minio.
+4. Создан манифест minio-secrets-statefulset.yaml осуществляющий деплой S3 хранилища использующий secret для получения чувствительных данных.

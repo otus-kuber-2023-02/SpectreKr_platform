@@ -28,6 +28,6 @@ http { \n\
     } \n\
 }' > /etc/nginx/nginx.conf
 #COPY nginx.conf /etc/nginx/
-COPY index.html /app/
+#COPY index.html /app/
 USER 1001
 CMD ["nginx", "-g", "daemon off;"]
