@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-http
+  namespace: prod-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prod-http
+  template:
+    metadata:
+      labels:
+        app: prod-http
+    spec:
+      containers:
+      - name: prod-http
+        image: kicbase/echo-server:1.0
+        ports:
+        - containerPort: 8080
