@@ -15,6 +15,13 @@ spec:
   containers: 
     - name: web
       image: spectrekr/otus:nginx
+      livenessProbe:
+        tcpSocket: 
+          port: 8000
+      readinessProbe:
+        httpGet:
+          path: /index.html
+          port: 8000
       volumeMounts: 
         - name: app
           mountPath: /app
