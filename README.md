@@ -34,3 +34,18 @@ DZ #4
 2. Создан манифест minio-headless-service.yaml предоставляющий доступ к панели администрирования minio.
 3. Создан манифест minio-secrets.yaml который создает secret для хранения creds от панели администрирования minio.
 4. Создан манифест minio-secrets-statefulset.yaml осуществляющий деплой S3 хранилища использующий secret для получения чувствительных данных.
+
+DZ #5
+1. Создан манифест 01-sa-bob создающий service account bob и подключающий права администратора кластера.
+2. Создан манифест 02-sa-dave создающий service account dave который не имеет доступа к кластеру.
+3. Создан манифест 01-ns создающий namespace prometheus.
+4. Создан манифест 02-sa создающий service account carol в namespace prometheus.
+5. Создан манифест 03-role создающий cluster role с правами просмотра подов во всем кластере.
+6. Создан манифест 04-rolebinding подключающий выше описанную роль к service account carol.
+7. Создан манифест 01-ns создающий namespace dev.
+8. Создан манифест 02-sa-jane создающий service account jane в namespace dev.
+9. Создан манифест 03-role-jane создающий role с правами администратора в nmespace dev.
+10. Создан манифест 04-rolebinding-jane подключающий выше описанную роль к service account jane.
+11. Создан манифест 05-sa-ken создающий service account ken в namespace dev.
+12. Создан манифест 06-role-ken создающий role с правами просмотра в nmespace dev.
+13. Создан манифест 07-rolebinding-ken подключающий выше описанную роль к service account ken.
