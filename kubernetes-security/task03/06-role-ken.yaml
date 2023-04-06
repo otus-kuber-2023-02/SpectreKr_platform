@@ -5,8 +5,8 @@ metadata:
   namespace: dev
 rules:
 - apiGroups:
-  - ""
+  - "*"
   resources:
-  - ""
+  - "*"
   verbs:
   - view

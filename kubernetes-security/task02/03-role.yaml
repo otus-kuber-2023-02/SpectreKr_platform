@@ -4,7 +4,7 @@ metadata:
   name: prometheus-view
 rules:
 - apiGroups:
-  - ""
+  - "*"
   resources:
   - pods
   verbs:
