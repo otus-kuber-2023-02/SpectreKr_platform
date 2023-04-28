@@ -1,0 +1,11 @@
+images:
+  tag: v0.5.0
+
+deployment:
+  replicas: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetport: 8080
+  nodeport: 30080
