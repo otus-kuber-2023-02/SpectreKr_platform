@@ -1,0 +1,9 @@
+resources:
+- ../../base
+namespace: hipster-shop
+commonLabels:
+  environment: dev
+  method: kustomize
+replicas:
+- name: adservice
+  count: 1

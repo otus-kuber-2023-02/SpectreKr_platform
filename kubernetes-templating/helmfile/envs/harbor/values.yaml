@@ -1,0 +1,21 @@
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: "harbor.home.ru"
+      notarySecretName: "notary.home.ru"
+  ingress:
+    hosts:
+      core: "harbor.home.ru"
+      notary: "notary.home.ru"
+    controller: default
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "true"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+#      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: "selfsigned-issuer"
+externalURL: "https://harbor.home.ru"

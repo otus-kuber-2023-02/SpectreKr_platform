@@ -1,0 +1,6 @@
+redis:
+  fullnameOverride: redis-cart
+  enabled: true
+  cluster:
+    enabled: false
+  usePassword: false
