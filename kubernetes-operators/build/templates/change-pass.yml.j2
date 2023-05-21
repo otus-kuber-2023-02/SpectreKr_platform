@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: default
+  name: change-pass-{{ name }}-job
+spec:
+  template:
+    metadata:
+      name: change-pass-{{ name }}-job
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: change-pass-{{ name }}
+        image: {{ image }}
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        - mysql -h {{ name }} -p'{{ last_pass }}' -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ password }}';ALTER USER 'root'@'%' IDENTIFIED BY '{{ password }}';flush privileges;"
