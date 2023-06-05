@@ -1,0 +1,71 @@
+logLevel: info
+
+tolerations:
+  - key: node-role
+    operator: Equal
+    value: infra
+    effect: NoSchedule
+
+config:
+  outputs: |
+
+    [OUTPUT]
+        Name es
+        Match kube.*
+        Host elasticsearch-master
+        Logstash_Format off
+        Retry_Limit False
+        Suppress_Type_Name On
+        tls On
+        tls.verify Off
+        http_user admin
+        http_passwd admin1
+        Trace_Error on
+        Replace_Dots on
+
+    [OUTPUT]
+        Name es
+        Match host.*
+        Host elasticsearch-master
+        Logstash_Format On
+        Logstash_Prefix node
+        Retry_Limit False
+        Suppress_Type_Name On
+        tls On
+        tls.verify Off
+        http_user admin
+        http_passwd admin1
+        Replace_Dots on
+
+  filters: |
+
+    [FILTER]
+        Name kubernetes
+        Match kube.*
+        Merge_Log On
+        Keep_Log Off
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+
+  inputs: |
+
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*.log
+        multiline.parser docker, cri
+        Tag kube.*
+        Mem_Buf_Limit 5MB
+        Skip_Long_Lines On
+
+    [INPUT]
+        Name systemd
+        Tag host.*
+        Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+        Read_From_Tail On
+
+    [INPUT]
+        Name     syslog
+        Parser   syslog-rfc3164
+        Listen   0.0.0.0
+        Port     5140
+        Mode     tcp

@@ -133,3 +133,16 @@ def change_password(body, **kwargs):
     delete_success_jobs(f"change-pass-{name}-job")
     return {'Message': 'mysql-instance password changed'}
 ```
+DZ #8
+1. Установили EFK стэк.
+2. Настроили поступление журналов в хранилище.
+3. * Повторить получение ошибки указанной в задании не получилось, но файл fluent-bit.values.yaml содержит наработки
+4. Установили prometheus-operator, grafana
+5. Настроили мониторинг elastics cluster, провели проверки показаний при падении нод
+6. Добавили получение логов из nigress-nginx, а так же настроили его на выдачу логов в json формате
+7. Настроили графики распределения по статус кодам запросов в nginx и собрали их в дашбоард
+8. Поставили loki и promtail
+9. Настроили автоматическое добавление datasource loki в grafana
+10. Создали dashboard для ingress с метриками по запросам и выводом логов.
+11. * Настроили аудит кластера. Для аудита необходимо файл audit.yaml из каталога audit положить в каталог /etc/kubernetes. После чего копируем манифест kube-apiserver.yaml в каталог /etc/kubernetes/manifests/ После этого, шедулер перезапустить под kube-apiserver и логи аудита будут попадать в /var/log/kubernetes/audit
+12. * Настроили сбор логов через rsyslog. Для работы необходимо установить, в случае отсутсвия пакета, скопировать файл 60-fluent-bit.conf  в /etc/rsyslog.d/ и перезапустить службу rsyslog. 
