@@ -66,6 +66,74 @@ DZ #6
 13. Вынес adservice в отдельный деплой с использованием kustomize, настроил деплой в 2 окружения hipster-shop и hipster-shop-prod.
 
 DZ #7
+1. Создали CRD и CR для развертывания mysql
+2. Создали mysql-operator выполняющий резервное копирование и восстановление БД
+3. Создали манифесты деплоя для mysql-operator
+4. Провели тестирование:
+```bash
+kubectl get jobs
+backup-mysql-instance-job    1/1           5s         6m23s
+restore-mysql-instance-job   1/1           43s        3m7s
+```
+```bash
+kubectl exec -it $MYSQLPOD -- mysql -potuspassword -e "select * from test;" otus-database
+mysql: [Warning] Using a password on the command line interface can be insecure.
++----+-------------+
+| id | name        |
++----+-------------+
+|  1 | some data   |
+|  2 | some data-2 |
+|  3 | some data   |
+|  4 | some data-2 |
++----+-------------+
+```
+5. Добавление в описание объекта поля status с описанием создания инстанса.
+В описание схемы обязательно добавить параметр:
+x-kubernetes-preserve-unknown-fields: true
+Далее дорабатываем код нашего оператора, чтоб заполнял наше поле, вводим переменную состояния exists_backup. По умолчанию она равна True что подразумевает существование бэкапа, далее на этапе создания PVC для бекапа, в случае успешного создания, переменная принимает значение False, что означает отсутствие бекапа:
+```python
+if exists_backup:
+        return {'Message': 'mysql-instance created with restore-job'}
+    else:
+        return {'message': 'mysql-instance created without restore-job'}
+```
+Данный код проверяет состояние переменной отвечающей за наличие резервной копией и выставляет статус.
+```bash
+Spec:
+  Database:     otus-database
+  Image:        arm64v8/mysql
+  Password:     otuspassword
+  usless_data:  useless info
+Status:
+  mysql_on_create:
+    Message:  mysql-instance created without restore-job
+Events:
+  Type    Reason   Age   From  Message
+```
+6. Реализовал смену пароля пользователя при обновлении инстанса.
+Для этого добавил ашблон job change-pass.yml.j2 который запускает под и производит смену пароля пользователя.
+Код в операторе который отслеживает обновление поля spec.password и запускает job. Перед запуском job оператор определяет текущий пароль и предыдущий и передает их в под.
+```python
+@kopf.on.update('otus.homework', 'v1', 'mysqls', field='spec.password')
+def change_password(body, **kwargs):
+    name = body['metadata']['name']
+    image = body['spec']['image']
+    password = body['spec']['password']
+    last_pass = yaml.load(body['metadata']['annotations']['kopf.zalando.org/last-handled-configuration'], Loader=SafeLoader)['spec']['password']
+
+    change_pass_job = render_template('change-pass.yml.j2', {
+                                      'name': name,
+                                      'image': image,
+                                      'password': password,
+                                      'last_pass': last_pass}
+                                      )
+    api = kubernetes.client.BatchV1Api()
+    api.create_namespaced_job('default', change_pass_job)
+    wait_until_job_end(f"change-pass-{name}-job")
+    delete_success_jobs(f"change-pass-{name}-job")
+    return {'Message': 'mysql-instance password changed'}
+```
+DZ #8
 1. Установили EFK стэк.
 2. Настроили поступление журналов в хранилище.
 3. * Повторить получение ошибки указанной в задании не получилось, но файл fluent-bit.values.yaml содержит наработки
