@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-test
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 100%
+  template:
+    metadata:
+      name: nginx-test
+      labels:
+        app: nginx-test
+    spec:
+      initContainers:
+      - name: get-page
+        image: hub.takravets.ru/spectrekr/docker/nginx.monitoring
+        command: ['sh', '-c', '/install.sh']
+        volumeMounts: 
+        - name: app
+          mountPath: /app
+      containers: 
+      - name: nginx-test
+        image: hub.takravets.ru/spectrekr/docker/nginx.monitoring
+        imagePullPolicy: Always
+        livenessProbe:
+          tcpSocket: 
+            port: 8000
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: 8000
+        volumeMounts: 
+        - name: app
+          mountPath: /app
+      volumes:
+      - name: app
+        emptyDir: {}
+           
+           
+           
+
+

@@ -1,1 +1,4 @@
 kubernetes-operators/build/__pycache__
+kubernetes-logging/stend
+kubernetes-monitoring/stand
+.DS_Store

@@ -1,0 +1,8 @@
+#Установка
+# helm upgrade --install --timeout 10m --wait prometheus-nginx-exporter prometheus-nginx-exporter --repo https://prometheus-community.github.io/helm-charts --namespace monitoring --create-namespace
+nginx:
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: false
+nginxServer: http://nginx-svc.test.svc.cluster.local./basic_status

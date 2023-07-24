@@ -133,6 +133,7 @@ def change_password(body, **kwargs):
     delete_success_jobs(f"change-pass-{name}-job")
     return {'Message': 'mysql-instance password changed'}
 ```
+
 DZ #8
 1. Установили EFK стэк.
 2. Настроили поступление журналов в хранилище.
@@ -146,3 +147,13 @@ DZ #8
 10. Создали dashboard для ingress с метриками по запросам и выводом логов.
 11. * Настроили аудит кластера. Для аудита необходимо файл audit.yaml из каталога audit положить в каталог /etc/kubernetes. После чего копируем манифест kube-apiserver.yaml в каталог /etc/kubernetes/manifests/ После этого, шедулер перезапустить под kube-apiserver и логи аудита будут попадать в /var/log/kubernetes/audit
 12. * Настроили сбор логов через rsyslog. Для работы необходимо установить, в случае отсутсвия пакета, скопировать файл 60-fluent-bit.conf  в /etc/rsyslog.d/ и перезапустить службу rsyslog. 
+
+
+DZ #10
+1. Настроил докер образ с опцией статистики nginx
+2. Настроил деплой данного образа
+3. Настроил сервис
+4. Установил prometheus-nginx-exporter и настроил сбор статистики
+5. Создал service-monitor который описывает сбор метрик с экспортера
+
+![Alt text](kubernetes-monitoring/image.png)

@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-nginx-exporter
+  labels:
+    prometheus: service-prometheus
+spec:
+  endpoints:
+  - port:  http
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-nginx-exporter
+      app.kubernetes.io/name: prometheus-nginx-exporter
+      helm.sh/chart: prometheus-nginx-exporter-0.1.1
+      
